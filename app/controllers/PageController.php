@@ -2,13 +2,7 @@
 
 class PageController extends \BaseController {
 
-     public function dispatch(Page $page)
-     {
-         dd($page);
-     }
-
-
-     /**
+    /**
 	 * Display a listing of the resource.
 	 * GET /page
 	 *

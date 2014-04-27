@@ -2,18 +2,18 @@
 
 /**
  * 
- * @param Node $node
+ * @param Node[] $nodes
  */
 class Page extends \Eloquent {
 	protected $fillable = [];
     
     /**
      * 
-     * @return Illuminate\Database\Relations\BelongsTo
+     * @return Illuminate\Database\Relations\HasMany
      */
-    public function node()
+    public function nodes()
     {
-        return belongsTo('Node');
+        return $this->hasMany('Node')->where('depth', 0);
     }
 
 }

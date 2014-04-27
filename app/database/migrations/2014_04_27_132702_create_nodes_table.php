@@ -27,12 +27,21 @@ class CreateNodesTable extends Migration {
 
       $table->timestamps();
 
+      $table->integer('page_id');
+      $table->string('resource');
+      $table->string('variable');
+      $table->longText('params');
+      
       // Default indexes
       // Add indexes on parent_id, lft, rgt columns by default. Of course,
       // the correct ones will depend on the application and use case.
       $table->index('parent_id');
       $table->index('lft');
       $table->index('rgt');
+      
+      $table->index('resource');
+      $table->index('variable');
+      
     });
   }
 

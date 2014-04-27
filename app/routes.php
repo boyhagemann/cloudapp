@@ -23,7 +23,7 @@ foreach(Page::all() as $page) {
     
     $method = $page->method;
     Route::$method($page->route, function() use ($page) {        
-        return App::make('PageController')->dispatch($page);        
+        return App::make('PageService')->dispatch($page);        
     });
     
 }

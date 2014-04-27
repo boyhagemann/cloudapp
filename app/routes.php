@@ -15,3 +15,15 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+
+
+Route::resource('pages', 'PageController');
+
+foreach(Page::all() as $page) {
+    
+    $method = $page->method;
+    Route::$method($page->route, function() use ($page) {        
+        return App::make('PageController')->dispatch($page);        
+    });
+    
+}

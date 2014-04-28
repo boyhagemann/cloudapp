@@ -19,6 +19,12 @@ Route::get('/', function()
 
 Route::resource('pages', 'PageController');
 
+
+
+if(!Schema::hasTable('pages')) {
+	return;
+}
+
 foreach(Page::all() as $page) {
     
     $method = $page->method;

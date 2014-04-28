@@ -9,12 +9,16 @@ class PageService
         $this->client = $client;
     }
 
-    public function dispatch(Page $page)
+	/**
+	 * @param Page $page
+	 * @return string
+	 */
+	public function dispatch(Page $page)
      {       
         $content = '';
         
          foreach($page->nodes as $node) {
-             $content .= $this->resolve($node);             
+			 $content .= $this->resolve($node);
          }
          
          return $content;         
@@ -26,14 +30,27 @@ class PageService
      */
     public function resolve(Node $node)
     {
-        $url = 'http://localhost/marketplace/public/resolve/' . $node->resource;
+        $url = 'http://localhost/marketplace/public/invoke/' . $node->resource;
+
+		$params = $node->params;
+
+		foreach($node->children as $child) {
+
+			$response = $this->resolve($child);
+			$params[$child->variable] = is_array($response) ? $response : (string) $response;
+		}
 
         $client = new GuzzleHttp\Client;
         $response = $client->post($url, array(
-            'body' => $node->params,
+            'body' => $params,
         ));
-        
-        return $response->getBody();
+
+		try {
+			return $response->json();
+		}
+		catch(Exception $e) {
+			return $response->getBody();
+		}
     }
 
 }

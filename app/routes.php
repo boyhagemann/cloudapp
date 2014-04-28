@@ -34,7 +34,8 @@ foreach(Page::all() as $page) {
     
 }
 
-
+Route::model('node', 'Node');
+Route::resource('node', 'NodeController');
 
 
 
@@ -56,13 +57,32 @@ class RedirectException extends Exception
 
 Event::listen('node.resolved', function(Node $node, $response) {
 
-	if($node->id == 6) {
+	if($node->resource == '12345newsstore') {
 		$response = Redirect::to('test');
 		throw new RedirectException($response);
 	}
 
 });
 
+Event::listen('node.resolving', function(Node $node) {
+
+	$key = $node->createCacheKey();
+
+	if(Cache::has($key)) {
+		return Cache::get($key);
+	}
+});
+
+Event::listen('node.resolved', function(Node $node, $response) {
+
+	if(!$node->cache) {
+		return;
+	}
+
+	$key = $node->createCacheKey();
+
+	Cache::put($key, $response, $node->cache);
+});
 
 
 App::error(function(RedirectException $e)

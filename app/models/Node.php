@@ -31,4 +31,15 @@ class Node extends BaseNode {
     {
         $this->attributes['params']  = json_encode($value);
     }
+
+	/**
+	 * @return string
+	 */
+	public function createCacheKey()
+	{
+		return md5(json_encode(array(
+			$this->id,
+			$this->config,
+		)));
+	}
 }

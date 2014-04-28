@@ -34,9 +34,10 @@ class PageService
      */
     public function resolve(Node $node)
     {
-		Event::fire('node.resolving', array($node));
-
-        $url = 'http://localhost/marketplace/public/invoke/' . $node->resource;
+		// Check if an event is returning the response early (caching)
+		if($response = Event::until('node.resolving', array($node))) {
+			return $response;
+		}
 
 		$data = array();
 
@@ -44,7 +45,18 @@ class PageService
 		// and assign the outcome to the right variable.
 		foreach($node->children as $child) {
 			$response = $this->resolve($child);
-			$data[$child->variable] = is_array($response) ? $response : (string) $response;
+
+			if(!isset($data[$child->variable])) {
+				$data[$child->variable] = '';
+			}
+
+			if(is_array($response)) {
+				$data[$child->variable] = $response;
+			}
+			else {
+				$data[$child->variable] .= $response;
+			}
+
 		}
 
 		// Combine the params together with this order:
@@ -53,19 +65,38 @@ class PageService
 		// - finally add the globel user input
 		$params = array_merge(Input::all(), $node->params, $data);
 
+
         $client = new GuzzleHttp\Client;
+		$url = 'http://localhost/marketplace/public/invoke/' . $node->resource;
         $response = $client->post($url, array(
             'body' => $params,
         ));
 
-		Event::fire('node.resolved', array($node, $response));
-
 		try {
-			return $response->json();
+			$output = $response->json();
 		}
 		catch(Exception $e) {
-			return $response->getBody();
+			$output = (string) View::make('nodes.show', array(
+				'node' => $node,
+				'body' => $response->getBody()
+			));
 		}
+
+		Event::fire('node.resolved', array($node, $output));
+
+		return $output;
     }
+
+	/**
+	 * @param Node $node
+	 * @return mixed
+	 */
+	public function config(Node $node)
+	{
+		$client = new GuzzleHttp\Client;
+		$url = 'http://localhost/marketplace/public/config/' . $node->resource;
+		$response = $client->get($url);
+		return $response->json();
+	}
 
 }

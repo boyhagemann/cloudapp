@@ -30,6 +30,7 @@ class CreateNodesTable extends Migration {
       $table->integer('page_id');
       $table->string('resource');
       $table->string('variable');
+      $table->string('cache');
       $table->longText('params');
       
       // Default indexes

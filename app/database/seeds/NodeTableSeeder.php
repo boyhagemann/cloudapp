@@ -9,6 +9,7 @@ class NodeTableSeeder extends Seeder {
             'page_id' => 1,
 			'variable' => '',
             'resource' => '12345layout',
+			'cache' => 1,
             'params' => array(
                 'title' => 'Test title',
                 'sidebar' => 'taaa',
@@ -20,6 +21,7 @@ class NodeTableSeeder extends Seeder {
 			'page_id' => 1,
 			'variable' => 'content',
 			'resource' => '9IAH54IY',
+			'cache' => 1,
 			'params' => array(
 				'title' => 'Test title 2',
 			),
@@ -30,6 +32,7 @@ class NodeTableSeeder extends Seeder {
 			'variable' => 'news',
 			'page_id' => 1,
 			'resource' => '9IAH54IX',
+			'cache' => 1,
 			'params' => array(),
 		))->makeChildOf($newsview);
 
@@ -38,6 +41,7 @@ class NodeTableSeeder extends Seeder {
 			'variable' => 'sidebar',
 			'page_id' => 1,
 			'resource' => '12345form',
+			'cache' => 1,
 			'params' => array(
 				'title' => 'Create news',
 				'action' => 'http://localhost/cloudapp/public/news/create',
@@ -50,17 +54,29 @@ class NodeTableSeeder extends Seeder {
 			'variable' => 'config',
 			'page_id' => 1,
 			'resource' => '12345newscreatecontract',
+			'cache' => 1,
 			'params' => array(),
 		))->makeChildOf($form);
 
 
+		$text = Node::create(array(
+			'id' => 6,
+			'variable' => 'sidebar',
+			'page_id' => 1,
+			'resource' => '12345text',
+			'cache' => 1,
+			'params' => array(
+				'text' => 'Hellllooo',
+			)
+		))->makeChildOf($layout);
 
 
 		$store = Node::create(array(
-			'id' => 6,
+			'id' => 7,
 			'page_id' => 2,
 			'variable' => '',
 			'resource' => '12345newsstore',
+			'cache' => 1,
 			'params' => array(),
 		));
 

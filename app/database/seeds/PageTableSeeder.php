@@ -11,6 +11,14 @@ class PageTableSeeder extends Seeder {
             'method' => 'GET',
             'alias' => 'test',
         ));
+
+		Page::create(array(
+			'id' => 2,
+			'title' => 'Create news',
+			'route' => 'news/create',
+			'method' => 'POST',
+			'alias' => 'news.create',
+		));
 	}
 
 }

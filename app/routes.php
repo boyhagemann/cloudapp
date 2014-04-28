@@ -33,3 +33,39 @@ foreach(Page::all() as $page) {
     });
     
 }
+
+
+
+
+
+class RedirectException extends Exception
+{
+	protected $response;
+
+	public function __construct(Symfony\Component\HttpFoundation\Response $response)
+	{
+		$this->response = $response;
+	}
+
+	public function getResponse()
+	{
+		return $this->response;
+	}
+}
+
+
+Event::listen('node.resolved', function(Node $node, $response) {
+
+	if($node->id == 6) {
+		$response = Redirect::to('test');
+		throw new RedirectException($response);
+	}
+
+});
+
+
+
+App::error(function(RedirectException $e)
+{
+	return $e->getResponse();
+});
